@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Journalism with F#</title>
+    <style>
+        :root {
+            --primary: #30638e;
+            --secondary: #d1495b;
+            --background: #f8f9fa;
+            --text: #2b2d42;
+        }
+        
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            background: var(--background);
+            color: var(--text);
+        }
+        
+        .slides {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide-content {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 90vh;
+            padding: 1rem;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin: 1rem 0;
+        }
+        
+        .code {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .code-emphasis {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: left;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 2rem 0;
+            font-size: 1.4rem;
+            white-space: pre;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .image-container {
+            margin: 2rem 0;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            text-align: left;
+        }
+        
+        .highlight-box {
+            background: rgba(48, 99, 142, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="slides">
+        <!-- Title Slide -->
+        <div class="slide active">
+            <div class="slide-content">
+                <h1>Data Journalism with F#</h1>
+                <h2>Transforming Data into Stories</h2>
+                <p style="font-size: 1.2rem;">Using Functional Programming for Data Analysis Pipeline</p>
+            </div>
+        </div>
+
+        <!-- Data Pipeline Overview -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>The Data Pipeline</h2>
+                <div class="image-container">
+                    <img src="pipeline.jpeg" alt="Data Pipeline Workflow" />
+                </div>
+                <div style="text-align: left; margin-top: 2rem;">
+                    <p>1. Data Acquisition → Raw Data Input</p>
+                    <p>2. Transformers → Data Manipulation</p>
+                    <p>3. Slicing & Dicing → Analysis</p>
+                    <p>4. Visualization → Insights Presentation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Squirrel Architecture -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Squirrel Framework Architecture</h2>
+                <div class="image-container">
+                    <img src="squirrel_architecture.png" alt="Squirrel Architecture" />
+                </div>
+                <div style="text-align: left; margin-top: 1rem;">
+                    <p>• Statistics & Mathematics at the core</p>
+                    <p>• Data Modeling for structure</p>
+                    <p>• Multiple I/O and visualization options</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- F# Base Wrappers -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>F# Base Wrappers</h2>
+                <div class="code">namespace Squirrel.FSharp
+open Squirrel
+
+module Table =
+    let pick ([<ParamArray>] columns : string array) (x:Table) =
+        x.Pick(columns)
+        
+    let addColumn(columnName:string)
+        (formula:string)(decimalDigits:int)(x:Table)=
+        x.AddColumn(columnName,formula,decimalDigits)
+        
+    let aggregate(how:AggregationMethod)(columnName:string)(x:Table)=
+        x.Aggregate(columnName,how)</div>
+                <p style="text-align: left;">Basic F# wrappers providing functional interface to core Squirrel operations</p>
+            </div>
+        </div>
+
+        <!-- DSL Layer -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Domain-Specific Language Layer</h2>
+                <div class="code">module TableFunAliases = 
+    let ``pick these columns`` = Table.pick
+    let ``load from this csv`` = DataAcquisition.LoadCsv 
+    
+    let ``aggregate numeric columns by sum and pick`` :
+       string -> Table -> Table = Table.aggregate AggregationMethod.Sum
+       
+    let ``add column with the formula`` = Table.addColumn</div>
+                <p style="text-align: left;">Enhanced readability with domain-specific language using F#'s backtick identifiers</p>
+            </div>
+        </div>
+
+        <!-- DSL Example -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Data Analysis using Domain-Specific Language</h2>
+                <div class="highlight-box">
+                    <p>Analyzing tip percentages by gender using natural language-like syntax</p>
+                </div>
+                <div class="code-emphasis">``load from this csv`` "tips.csv" 
+|> ``add column with the formula`` "tip%" "[tip]*100/[total_bill]" 3 
+|> ``pick these columns`` "sex" "tip%"
+|> ``aggregate numeric columns by sum and pick`` "sex"
+|> ``round off all decimal places to `` 2
+|> ``pretty print to console``</div>
+            </div>
+        </div>
+
+        <!-- Pipeline Example -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Data Analysis Pipeline Example</h2>
+                <div class="image-container">
+                    <img src="step_by_step.jpeg" alt="Code Example with Annotations" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Why This Approach Works</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Technical Benefits</h3>
+                        <ul>
+                            <li>Type-safe operations</li>
+                            <li>Immutable data structures</li>
+                            <li>Composable transformations</li>
+                            <li>Partial application support</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>User Benefits</h3>
+                        <ul>
+                            <li>Natural language-like syntax</li>
+                            <li>Clear data flow</li>
+                            <li>Self-documenting code</li>
+                            <li>Reduced learning curve</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thank You -->
+        <div class="slide">
+            <div class="slide-content">
+                <h1>Thank You!</h1>
+                <p style="font-size: 1.5rem;">GitHub: sudipto80/Squirrel</p>
+                <p style="font-size: 1.2rem;">Questions?</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="previousSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+    </script>
+</body>
+</html>
